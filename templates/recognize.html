@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recognize Gestures</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .video-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            max-width: 720px;
+        }
+
+        img {
+            border: 1px solid #ddd; /* Gray border */
+            border-radius: 4px;  /* Rounded border */
+            padding: 5px; /* Some padding */
+            width: 100%; /* Set width to 100% of the container */
+            max-width: 720px; /* Maximum width */
+        }
+
+        a.button {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 20px 0;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Gesture Recognition Application</h1>
+    
+    <div class="video-container">
+        <img src="{{ url_for('video_feed') }}" alt="Video Stream">
+    </div>
+
+    <a href="{{ url_for('save_gesture_data') }}" class="button">Save Data</a>
+
+</body>
+</html>

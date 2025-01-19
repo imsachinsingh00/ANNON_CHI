@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HandyLabels: Realtime Hand Gesture Recognition</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #4A90E2;
+            font-size: 70px; /* Larger font size for the main title */
+            margin-bottom: 5px; /* Reduces space below the main title */
+        }
+
+        h2 {
+            color: #333;
+            font-size: 24px; /* Smaller font size for the subtitle */
+            margin-top: 0;
+            margin-bottom: 50px; /* Reduces space above the subtitle */
+        }
+
+        a {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 20px;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
+            background-color: #45a049;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>HandyLabels</h1>
+    <h2>Realtime Hand Gesture Recognition as Annotation Tool</h2>
+    <a href="{{ url_for('set_labels') }}">Set Custom Labels</a>
+    <a href="{{ url_for('import_data') }}">Import Data from Label Studio</a>
+
+</body>
+</html>

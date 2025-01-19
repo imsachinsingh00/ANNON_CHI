@@ -1,0 +1,225 @@
+[
+  {
+    "id": 1,
+    "annotations": [
+      {
+        "id": 1,
+        "completed_by": 1,
+        "result": [
+          {
+            "original_length": 0.8335179999999998,
+            "value": {
+              "start": 4.150915,
+              "end": 4.984433,
+              "channel": 0,
+              "labels": [
+                "x"
+              ]
+            },
+            "id": "qdVF0",
+            "from_name": "tricks",
+            "to_name": "audio",
+            "type": "labels",
+            "origin": "manual"
+          },
+          {
+            "original_length": 1.263757,
+            "value": {
+              "start": 4.984433,
+              "end": 6.24819,
+              "channel": 0,
+              "labels": [
+                "g"
+              ]
+            },
+            "id": "5uRQ4",
+            "from_name": "tricks",
+            "to_name": "audio",
+            "type": "labels",
+            "origin": "manual"
+          },
+          {
+            "original_length": 1.0009870000000003,
+            "value": {
+              "start": 6.24819,
+              "end": 7.249177,
+              "channel": 0,
+              "labels": [
+                "x"
+              ]
+            },
+            "id": "mhhfC",
+            "from_name": "tricks",
+            "to_name": "audio",
+            "type": "labels",
+            "origin": "manual"
+          },
+          {
+            "original_length": 0.08858099999999958,
+            "value": {
+              "start": 7.249177,
+              "end": 7.337758,
+              "channel": 0,
+              "labels": [
+                "g"
+              ]
+            },
+            "id": "JQhxj",
+            "from_name": "tricks",
+            "to_name": "audio",
+            "type": "labels",
+            "origin": "manual"
+          },
+          {
+            "original_length": 0.11410199999999993,
+            "value": {
+              "start": 7.337758,
+              "end": 7.45186,
+              "channel": 0,
+              "labels": [
+                "f"
+              ]
+            },
+            "id": "USiLg",
+            "from_name": "tricks",
+            "to_name": "audio",
+            "type": "labels",
+            "origin": "manual"
+          },
+          {
+            "original_length": 0.33015799999999995,
+            "value": {
+              "start": 7.45186,
+              "end": 7.782018,
+              "channel": 0,
+              "labels": [
+                "x"
+              ]
+            },
+            "id": "jqF6B",
+            "from_name": "tricks",
+            "to_name": "audio",
+            "type": "labels",
+            "origin": "manual"
+          },
+          {
+            "original_length": 0.21946500000000047,
+            "value": {
+              "start": 7.782018,
+              "end": 8.001483,
+              "channel": 0,
+              "labels": [
+                "f"
+              ]
+            },
+            "id": "eswuF",
+            "from_name": "tricks",
+            "to_name": "audio",
+            "type": "labels",
+            "origin": "manual"
+          },
+          {
+            "original_length": 0.33694299999999977,
+            "value": {
+              "start": 8.001483,
+              "end": 8.338426,
+              "channel": 0,
+              "labels": [
+                "x"
+              ]
+            },
+            "id": "UG7xo",
+            "from_name": "tricks",
+            "to_name": "audio",
+            "type": "labels",
+            "origin": "manual"
+          },
+          {
+            "original_length": 0.13751300000000022,
+            "value": {
+              "start": 8.338426,
+              "end": 8.475939,
+              "channel": 0,
+              "labels": [
+                "f"
+              ]
+            },
+            "id": "Z3J0R",
+            "from_name": "tricks",
+            "to_name": "audio",
+            "type": "labels",
+            "origin": "manual"
+          },
+          {
+            "original_length": 0.21603299999999948,
+            "value": {
+              "start": 8.475939,
+              "end": 8.691972,
+              "channel": 0,
+              "labels": [
+                "x"
+              ]
+            },
+            "id": "eBU1W",
+            "from_name": "tricks",
+            "to_name": "audio",
+            "type": "labels",
+            "origin": "manual"
+          },
+          {
+            "original_length": 0.1254609999999996,
+            "value": {
+              "start": 8.691972,
+              "end": 8.817433,
+              "channel": 0,
+              "labels": [
+                "f"
+              ]
+            },
+            "id": "coZQ6",
+            "from_name": "tricks",
+            "to_name": "audio",
+            "type": "labels",
+            "origin": "manual"
+          }
+        ],
+        "was_cancelled": false,
+        "ground_truth": false,
+        "created_at": "2025-01-19T22:53:30.218783Z",
+        "updated_at": "2025-01-19T22:53:30.218783Z",
+        "draft_created_at": "2025-01-19T22:53:30.218783Z",
+        "lead_time": 4.669999999999999,
+        "prediction": {},
+        "result_count": 0,
+        "unique_id": "6677bf7b-b920-4cd8-9eac-c649c1772cfc",
+        "import_id": null,
+        "last_action": null,
+        "task": 1,
+        "project": 25,
+        "updated_by": 1,
+        "parent_prediction": null,
+        "parent_annotation": null,
+        "last_created_by": null
+      }
+    ],
+    "file_upload": "1212df4d-HandyLabels.MP4",
+    "drafts": [],
+    "predictions": [],
+    "data": {
+      "video_url": "/data/upload/30/030cca83-Video_1.mp4"
+    },
+    "meta": {},
+    "created_at": "2025-01-19T22:53:30.218783Z",
+    "updated_at": "2025-01-19T22:53:30.218783Z",
+    "inner_id": 1,
+    "total_annotations": 1,
+    "cancelled_annotations": 0,
+    "total_predictions": 0,
+    "comment_count": 0,
+    "unresolved_comment_count": 0,
+    "last_comment_updated_at": null,
+    "project": 25,
+    "updated_by": 1,
+    "comment_authors": []
+  }
+]

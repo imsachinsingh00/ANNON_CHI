@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Custom Labels</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #4A90E2;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin: auto;
+            width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .gesture-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .input-img-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .input-img-container img {
+            width: 100px;
+            height: auto;
+            border-radius: 8px;
+        }
+        
+        label {
+            text-align: left;
+            font-size: 16px;
+            font-weight: bold;
+            flex: 1;
+            white-space: nowrap;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            width: calc(100% - 120px); /* Subtract image width and padding */
+            margin-right: 10px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Set Custom Labels for Gestures</h1>
+    <form method="POST" action="{{ url_for('set_labels') }}">
+        <div class="container">
+            <div class="gesture-container">
+                <label for="label1">Label for Gesture 1 (Fist):</label>
+                <div class="input-img-container">
+                    <input type="text" id="label1" name="label1" placeholder="Enter label for Gesture 1" required>
+                    <img src="{{ url_for('static', filename='images/fist.png') }}" alt="Fist Gesture">
+                </div>
+            </div>
+            
+            <div class="gesture-container">
+                <label for="label2">Label for Gesture 2 (OK):</label>
+                <div class="input-img-container">
+                    <input type="text" id="label2" name="label2" placeholder="Enter label for Gesture 2" required>
+                    <img src="{{ url_for('static', filename='images/ok.png') }}" alt="OK Gesture">
+                </div>
+            </div>
+            
+            <div class="gesture-container">
+                <label for="label3">Label for Gesture 3 (Peace):</label>
+                <div class="input-img-container">
+                    <input type="text" id="label3" name="label3" placeholder="Enter label for Gesture 3" required>
+                    <img src="{{ url_for('static', filename='images/peace.png') }}" alt="Peace Gesture">
+                </div>
+            </div>
+            
+            <div class="gesture-container">
+                <label for="label4">Label for Gesture 4 (Stop):</label>
+                <div class="input-img-container">
+                    <input type="text" id="label4" name="label4" placeholder="Enter label for Gesture 4" required>
+                    <img src="{{ url_for('static', filename='images/stop.png') }}" alt="Stop Gesture">
+                </div>
+            </div>
+            
+            <div class="gesture-container">
+                <label for="label5">Label for Gesture 5 (Two Up):</label>
+                <div class="input-img-container">
+                    <input type="text" id="label5" name="label5" placeholder="Enter label for Gesture 5" required>
+                    <img src="{{ url_for('static', filename='images/two_up.png') }}" alt="Two Up Gesture">
+                </div>
+            </div>
+            
+            <button type="submit">Save Labels</button>
+        </div>
+    </form>
+</body>
+</html>
