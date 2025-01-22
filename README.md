@@ -17,6 +17,7 @@ HandyLabels is a Python-based application designed for gesture recognition and a
 - **Web Interface**: User-friendly web interface built with Flask.
  
 ## Installation
+- Please download the model weight from link: https://drive.google.com/file/d/1pSsiVGau6yXdHSDS9j97mQ5rE__QiXOJ/view?usp=drive_link
 
 ### Prerequisites
 
