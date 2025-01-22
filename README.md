@@ -26,7 +26,7 @@ HandyLabels is a Python-based application designed for gesture recognition and a
 
 - A GPU-compatible system for faster inference (optional)
  
-##Opertation 
+## Opertation 
  
 ```
 pip install -r requirements.txt
