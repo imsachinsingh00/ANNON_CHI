@@ -1,7 +1,6 @@
 import csv
 import time
-from datetime import datetime, timedelta
-from ultralytics import YOLO
+from datetime import datetime
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -10,28 +9,48 @@ import os
 import plotly.express as px
 import pandas as pd
 from werkzeug.utils import secure_filename
+import torch
+import torch.nn as nn
+from torchvision import transforms, models
+from PIL import Image
 import json
-import matplotlib.pyplot as plt
-import uuid
-import random  # Make sure to import the random module
-from datetime import datetime  # Import datetime for timestamp
-import string  # Add this line to use string.ascii_letters and string.digits
-
-
 
 # Flask app setup
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.secret_key = 'supersecretkey'
 
-# Load the gesture recognition model
-model = YOLO('./best.pt') #/Users/sachinsingh/Documents/HandyLabel/best.pt
+# Load the ViT-B16 model
+def load_vit_model(weights_path, num_classes, device):
+    model = models.vit_b_16(pretrained=False)  # Initialize ViT-B16
+    num_ftrs = model.heads.head.in_features
+    model.heads.head = nn.Linear(num_ftrs, num_classes)  # Adjust the final layer
+    checkpoint = torch.load(weights_path, map_location=device)
+    model.load_state_dict(checkpoint['MODEL_STATE'] if 'MODEL_STATE' in checkpoint else checkpoint)
+    return model
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+weights_path = './best_model.pth'
+num_classes = 5  # Number of gesture classes
+model = load_vit_model(weights_path, num_classes, device).to(device)
+model.eval()
+
+# MediaPipe Hands setup
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
-
 hands = mp_hands.Hands(static_image_mode=True, min_detection_confidence=0.3)
+
+# Default labels dictionary
+labels_dict = {0: 'fist', 1: 'ok', 2: 'peace', 3: 'stop', 4: 'two up'}
+custom_labels_dict = labels_dict.copy()
+
+# Image preprocessing transformations
+transform = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+])
 
 # Initialize variables for tracking gestures
 previous_gesture = None
@@ -75,81 +94,76 @@ def generate_frames():
 
     # Initialize start recording time
     start_recording_time = datetime.now()
-
     cap = cv2.VideoCapture(0)
 
     while capture_flag:
-        data_aux = []
-        x_ = []
-        y_ = []
-
         ret, frame = cap.read()
         if not ret:
             break
 
-        H, W, _ = frame.shape
+        H, W, _ = frame.shape  # Frame dimensions
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Convert to RGB for Mediapipe
 
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
+        # Process the frame for hand landmarks
         results = hands.process(frame_rgb)
+
         if results.multi_hand_landmarks:
+            # Draw skeletons and compute bounding box
+            x_ = []
+            y_ = []
             for hand_landmarks in results.multi_hand_landmarks:
+                # Draw the hand skeleton
                 mp_drawing.draw_landmarks(
                     frame,
                     hand_landmarks,
                     mp_hands.HAND_CONNECTIONS,
                     mp_drawing_styles.get_default_hand_landmarks_style(),
-                    mp_drawing_styles.get_default_hand_connections_style())
+                    mp_drawing_styles.get_default_hand_connections_style()
+                )
+                # Collect coordinates for bounding box calculation
+                for landmark in hand_landmarks.landmark:
+                    x_.append(landmark.x)
+                    y_.append(landmark.y)
 
-            for hand_landmarks in results.multi_hand_landmarks:
-                for i in range(len(hand_landmarks.landmark)):
-                    x = hand_landmarks.landmark[i].x
-                    y = hand_landmarks.landmark[i].y
-
-                    x_.append(x)
-                    y_.append(y)
-
-                for i in range(len(hand_landmarks.landmark)):
-                    x = hand_landmarks.landmark[i].x
-                    y = hand_landmarks.landmark[i].y
-                    data_aux.append(x - min(x_))
-                    data_aux.append(y - min(y_))
-
+            # Calculate bounding box
             x1 = int(min(x_) * W) - 10
             y1 = int(min(y_) * H) - 10
-
             x2 = int(max(x_) * W) + 10
             y2 = int(max(y_) * H) + 10
 
-            prediction = model.predict(frame, conf=0.25, iou=0.45)
-            probs = prediction[0].probs.data.numpy()
-            detected_gesture_index = np.argmax(probs)
-            detected_gesture = custom_labels_dict.get(detected_gesture_index, None)
+            # Crop and preprocess the frame for ViT model
+            cropped_frame = frame_rgb[y1:y2, x1:x2]  # Crop the bounding box region
+            if cropped_frame.size > 0:  # Ensure the cropped region is valid
+                cropped_image = Image.fromarray(cv2.cvtColor(cropped_frame, cv2.COLOR_BGR2RGB))  # Convert to PIL
+                input_tensor = transform(cropped_image).unsqueeze(0).to(device)  # Preprocess
 
-            if detected_gesture is None:
-                continue
+                # Perform gesture recognition using ViT model
+                with torch.no_grad():
+                    outputs = model(input_tensor)
+                    _, predicted = torch.max(outputs, 1)
+                    detected_gesture = custom_labels_dict.get(predicted.item(), None)
 
-            # Get the current timestamp and calculate relative time from the start
-            current_time = datetime.now()
-            relative_time = current_time - start_recording_time
+                # Draw the detected gesture and bounding box
+                if detected_gesture:
+                    cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 0), 4)  # Draw bounding box
+                    cv2.putText(frame, detected_gesture, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 255, 0), 3, cv2.LINE_AA)
 
-            # Check if the detected gesture has changed
-            if detected_gesture != previous_gesture:
-                # If the detected gesture has changed, calculate the duration of the previous gesture
-                if previous_gesture is not None:
-                    gesture_end_time = relative_time.total_seconds()
-                    gesture_duration = gesture_end_time - gesture_start_time
-                    # Store the detected gesture, start time, end time, and duration in the list
-                    gesture_data_list.append([previous_gesture, gesture_start_time, gesture_end_time, round(gesture_duration, 2)])
+                    # Track gesture changes
+                    current_time = datetime.now()
+                    relative_time = current_time - start_recording_time
 
-                # Update the previous gesture and its start time
-                previous_gesture = detected_gesture
-                gesture_start_time = relative_time.total_seconds()
+                    if detected_gesture != previous_gesture:
+                        if previous_gesture is not None:
+                            # Calculate gesture duration
+                            gesture_end_time = relative_time.total_seconds()
+                            gesture_duration = gesture_end_time - gesture_start_time
+                            # Store gesture data
+                            gesture_data_list.append([previous_gesture, gesture_start_time, gesture_end_time, round(gesture_duration, 2)])
 
-            # Draw rectangle around the detected gesture
-            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 0), 4)
-            cv2.putText(frame, detected_gesture, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.3, (0, 255, 0), 3, cv2.LINE_AA)
+                        previous_gesture = detected_gesture
+                        gesture_start_time = relative_time.total_seconds()
 
+        # Encode the frame for streaming
         ret, buffer = cv2.imencode('.jpg', frame)
         frame = buffer.tobytes()
 
@@ -157,6 +171,8 @@ def generate_frames():
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
     cap.release()
+
+
 
 @app.route('/save_data')
 def save_gesture_data():
@@ -183,9 +199,13 @@ import random  # Make sure to import the random module
 import uuid  # Make sure to import uuid for unique IDs
 from datetime import datetime  # Import datetime for timestamp
 
+import string  # Ensure this is at the top of your script
+import random  # Ensure random is also imported
+
 def generate_alphanumeric_id(length=5):
     """Generates a random alphanumeric ID."""
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
+
 
 def save_label_studio_json(gesture_data, file_path):
     current_time = datetime.utcnow().isoformat() + "Z"
